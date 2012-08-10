@@ -18,4 +18,11 @@ describe('ボウリング',function() {
 
     expect(boaling.throw(score)).toBe(29);
   });
+
+  it('ストライクが1回で残りが1ピン倒しの場合トータル30', function(){
+    var score = [[10],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1]];
+
+    expect(boaling.throw(score)).toBe(30);
+  });
+
 });
