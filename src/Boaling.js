@@ -4,8 +4,8 @@ var Bowling =function() {
 Bowling.prototype.result = function(score) {
   var gameTotal = 0;
   var freamTotal;
-  var strike = false;
-  var spare = false;
+  var strike = [];
+  var spare = [];
 
   for (var i = 0; i < score.length; i++) {
     freamTotal = 0;
@@ -13,18 +13,18 @@ Bowling.prototype.result = function(score) {
       freamTotal += score[i][j];
     }
 
-    if (strike) {
+    if (strike[(i - 2)] && strike[(i - 1)]) {
+      freamTotal *= 3;
+    } else if (strike[(i - 1)]) {
       freamTotal *= 2;
-      strike = false;
-    } else if (spare) {
+    } else if (spare[(i - 1)]) {
       freamTotal += score[i][0];
-      spare = false;
     }
 
     if (score[i][0] == 10) {
-      strike = true;
+      strike[i] = true;
     } else if (freamTotal == 10) {
-      spare = true;
+      spare[i] = true;
     }
     gameTotal += freamTotal;
   }
