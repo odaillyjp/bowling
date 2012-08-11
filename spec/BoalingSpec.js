@@ -24,4 +24,10 @@ describe('ボウリング',function() {
 
     expect(bowling.result(score)).toBe(30);
   });
+
+  it('パーフェクトゲーム!', function() {
+    var score = [[10],[10],[10],[10],[10],[10],[10],[10],[10],[10]]
+
+    expect(bowling.result(score)).toBe(300);
+  });
 });
