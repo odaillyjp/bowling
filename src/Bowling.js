@@ -24,6 +24,8 @@ Bowling.prototype.result = function(score) {
   return gameTotal;
 };
 
+// TODO: 以下のメソッドをプライベート化する
+
 Bowling.prototype.frameResult = function(score) {
   var frameTotal = 0;
   for (var i = 0; i < score.length; i++) {
