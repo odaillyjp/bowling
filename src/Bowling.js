@@ -1,75 +1,80 @@
-var Bowling = function() {};
+function Bowling() {
+  this.totalScore = 0;
+  this.strike = [];
+  this.spare = [];
+};
 
-Bowling.prototype.result = function(score) {
-  var gameTotal = 0;
-  var frameTotal = 0;
-  var scoreBonus = 0;
-  var strike = [];
-  var spare = [];
+Bowling.prototype = {
+  result : function(score) {
+    var frameTotal = 0;
+    var bonusScore = 0;
 
-  for (var i = 0; i < score.length; i++) {
-    frameTotal = this.frameResult(score[i]);
-    strike[i] = this.isStrike(score[i]);
-    spare[i] = this.isSpare(score[i]);
-
-    if (strike[9]) {
-      strike[10] = this.isStrike(score[9].slice(1));
-      spare[10] = this.isStrike(score[9].slice(1));
-    } else if (spare[9]) {
-      strike[10] = this.isStrike(score[9].slice(2));
-      spare[10] = false;
-    }
-
-    // TODO: scoreBonus を計算するコードをメソッド化する
-    scoreBonus = 0;
-    if (strike[(i - 2)] && strike[(i - 1)]) {
-      // ifネストは邪道!
-      if (strike[9] && strike[10]) {
-        scoreBonus = 30;
-      } else if (strike[9]) {
-        scoreBonus = 20 + score[9][1] + score[9][2];
-      } else if (spare[9]) {
-        scoreBonus = 20 + score[9][2];
-      } else {
-        scoreBonus = (frameTotal * 2);
+    for (var i = 0; i < score.length; i++) {
+      frameTotal = this._frameResult(score[i]);
+      this.strike[i] = this._isStrike(score[i]);
+      this.spare[i] = this._isSpare(score[i]);
+      if (this.strike[9]) {
+        this.strike[10] = this._isStrike(score[9].slice(1));
+        this.spare[10] = this._isStrike(score[9].slice(1));
+      } else if (this.spare[9]) {
+        this.strike[10] = this._isStrike(score[9].slice(2));
+        this.spare[10] = false;
       }
-    } else if (strike[(i - 1)]) {
-      // ifネストは邪道!
-      if ((strike[9]) || (strike[10])) {
-        scoreBonus = 20;
-      } else if (strike[9]) {
-        scoreBonus = 10 + score[9][1] + score[9][2];
-      } else if (spare[9]) {
-        scoreBonus = 10 + score[9][2];
-      } else {
-        scoreBonus = frameTotal;
-      }
-    } else if (spare[(i - 1)]) {
-      scoreBonus = score[i][0];
+
+      bonusScore = this._getBonusScore(i,score,frameTotal);
+      this.totalScore += (frameTotal + bonusScore);
     }
+    return this.totalScore;
+  },
 
-    gameTotal += (frameTotal + scoreBonus)
+  // Private method
+  _frameResult : function(score) {
+    var frameTotal = 0;
+    for (var i = 0; i < score.length; i++) {
+      frameTotal += score[i];
+    }
+    return frameTotal;
+  },
+
+  _getBonusScore : function(frame,score,frameTotal) {
+    var bonusScore = 0;
+    if (this.strike[(frame - 2)] && this.strike[(frame - 1)]) {
+      // ifネストは邪道!
+      if (this.strike[9] && this.strike[10]) {
+        bonusScore = 30;
+      } else if (this.strike[9]) {
+        bonusScore = 20 + score[9][1] + score[9][2];
+      } else if (this.spare[9]) {
+        bonusScore = 20 + score[9][2];
+      } else {
+        bonusScore = (frameTotal * 2);
+      }
+    } else if (this.strike[(frame - 1)]) {
+      // ifネストは邪道!
+      if ((this.strike[9]) || (this.strike[10])) {
+        bonusScore = 20;
+      } else if (this.strike[9]) {
+        bonusScore = 10 + score[9][1] + score[9][2];
+      } else if (this.spare[9]) {
+        bonusScore = 10 + score[9][2];
+      } else {
+        bonusScore = frameTotal;
+      }
+    } else if (this.spare[(frame - 1)]) {
+      bonusScore = score[frame][0];
+    }
+    return bonusScore;
+  },
+
+  _isStrike : function(score) {
+    var strikeFlag = false;
+    if (score[0] == 10) { strikeFlag = true; }
+    return strikeFlag;
+  },
+
+  _isSpare : function(score) {
+    var spareFlag = false;
+    if ((score[0] != 10) && (score[0] + score[1]) == 10) { spareFlag = true; }
+    return spareFlag;
   }
-  return gameTotal;
-};
-
-// TODO: 以下のメソッドをプライベート化する
-Bowling.prototype.frameResult = function(score) {
-  var frameTotal = 0;
-  for (var i = 0; i < score.length; i++) {
-    frameTotal += score[i];
-  }
-  return frameTotal;
-};
-
-Bowling.prototype.isStrike = function(score) {
-  var strikeFlag = false;
-  if (score[0] == 10) { strikeFlag = true; }
-  return strikeFlag;
-};
-
-Bowling.prototype.isSpare = function(score) {
-  var spareFlag = false;
-  if ((score[0] != 10) && (score[0] + score[1]) == 10) { spareFlag = true; }
-  return spareFlag;
 };
