@@ -39,24 +39,22 @@ Bowling.prototype = {
   _getBonusScore : function(frame,score,frameTotal) {
     var bonusScore = 0;
     if (this.strike[(frame - 2)] && this.strike[(frame - 1)]) {
-      // ifネストは邪道!
       if (this.strike[9] && this.strike[10]) {
         bonusScore = 30;
       } else if (this.strike[9]) {
-        bonusScore = 20 + score[9][1] + score[9][2];
+        bonusScore = (20 + score[frame][1]);
       } else if (this.spare[9]) {
-        bonusScore = 20 + score[9][2];
+        bonusScore = (10 + score[frame][0]);
       } else {
-        bonusScore = (frameTotal * 2);
+        bonusScore = (frameTotal + score[frame][0]);
       }
     } else if (this.strike[(frame - 1)]) {
-      // ifネストは邪道!
       if ((this.strike[9]) || (this.strike[10])) {
         bonusScore = 20;
       } else if (this.strike[9]) {
-        bonusScore = 10 + score[9][1] + score[9][2];
+        bonusScore = (10 + score[frame][1]);
       } else if (this.spare[9]) {
-        bonusScore = 10 + score[9][2];
+        bonusScore = 10;
       } else {
         bonusScore = frameTotal;
       }
